@@ -1,4 +1,4 @@
-# Bliss
+# Blisp
 Blender lisp interaction
 
 
