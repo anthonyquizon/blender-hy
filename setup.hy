@@ -8,7 +8,10 @@
 
 ;; TODO copy modules to modules folder
 ;; TODO remove old blisp folder and filename
-  
+
+;;TODO arguments
+;;TODO evnironment variable
+
 (import shutil)
 (import os)
 
