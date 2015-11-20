@@ -15,8 +15,8 @@
 (import shutil)
 (import os)
 
-(def dest-dir "/Users/anthony/Library/Application Support/Blender/2.76/scripts/addons/blisp")
-(def src-dir (os.path.abspath "./blisp"))
+(def dest-dir "/Users/anthony/Library/Application Support/Blender/2.76/scripts/addons/blispy")
+(def src-dir (os.path.abspath "./addon"))
 
 (defn clean []
   (if (or (os.path.isdir dest-dir) (os.path.lexists dest-dir))

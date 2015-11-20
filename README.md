@@ -1,4 +1,4 @@
-# Blisp
+# Blispy
 Blender + lisp ([hy](https://github.com/hylang/hy))
 
 References:
