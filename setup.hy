@@ -12,10 +12,13 @@
 ;;TODO arguments
 ;;TODO evnironment variable
 
+;;TODO pip install -t addon/modules
+;;TODO python-sh
+
 (import shutil)
 (import os)
 
-(def dest-dir "/Users/anthony/Library/Application Support/Blender/2.76/scripts/addons/blispy")
+(def dest-dir (+ (get os.environ "HOME") "/Library/Application Support/Blender/2.76/scripts/addons/blispy"))
 (def src-dir (os.path.abspath "./addon"))
 
 (defn clean []
@@ -33,4 +36,4 @@
   (print "sys linking to " dest-dir)
   (os.symlink src-dir dest-dir))
 
-;; (syslink-addon)
+(syslink-addon)
