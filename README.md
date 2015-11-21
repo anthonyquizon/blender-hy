@@ -1,5 +1,5 @@
 # Blispy
-Blender + lisp ([hy](https://github.com/hylang/hy))
+[Blender](https://www.blender.org/) + lisp ([hy](https://github.com/hylang/hy))
 
 ## Features
 * external nREPL connection (TODO)
