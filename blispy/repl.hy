@@ -8,7 +8,7 @@
 (def HOST "localhost")
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
-(def PORT 9993)
+(def PORT 9992)
 
 (defn socket-handle[socket data]
   (socket.connect (, HOST PORT) )

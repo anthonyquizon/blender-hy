@@ -4,43 +4,46 @@
         [hy])
 
 (def HOST "localhost")
-(def PORT 9993)
+(def PORT 9992)
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
 (def RUNNING true)
 
-;;TODO stdout redirect
 ;;TODO stderr redirect
 
-;; class StdOut(object):
-;;     def write(self, string):
-;;         place into buffer
-;;         sys.__stdout__.write(string)
-
-;; TODO error buffer
-        
-;; sys.stdout = StdOut()
+(defclass StdOut[object]
+  (defn __init__[self]
+    (setv self.buffer ""))
+  
+  (defn write[self string]
+    (let [out sys.__stdout__]
+      (setv self.buffer (+ self.buffer string))
+      (out.write string)))
+  
+  (defn flush[self]
+    (setv self.buffer "")))
 
 (defn send [conn data]
   (conn.send (data.encode ENCODING)))
 
-(defn process-input [socket]
+(defn process-input [socket stdout]
   (let [[conn addr] (socket.accept)
         data (conn.recv BUFFER_SIZE)
         data-str (data.decode "utf-8")]
-    (print "Connected with" (get addr 0) ":" (get addr 1))
-    (print "Recieved:" data-str)
-    
     (try
-     (let [result (eval (read-str data-str))]
-       (send conn (str result)))
+     (let [result (eval (read-str data-str))
+           buffer (+ stdout.buffer (if (!= result None) (str result) ""))]
+       (send conn buffer)
+       (stdout.flush))
      (except []
-       (send conn "eval error")
-       (print "eval error")))))
+       (send conn "eval error")))))
   
-(defn thread-handle [socket]
-  (while RUNNING
-    (process-input socket)))
+(defn thread-handle []
+  (let [socket (create-socket)
+        stdout (StdOut)]
+    (setv sys.stdout stdout)
+    (while RUNNING
+      (process-input socket stdout))))
 
 (defn create-socket[]
   (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
@@ -54,10 +57,8 @@
     socket))
 
 (defn register[]
-  (let [socket (create-socket)
-        thread (apply (. th Thread) [] {:target thread-handle
-                                        :args (, socket)})]
-       (thread.start)))
+  (let [thread (apply (. th Thread) [] {:target thread-handle})]
+    (thread.start)))
 
 (defn unregister[]
   (print "blispy repl unregistering"))
