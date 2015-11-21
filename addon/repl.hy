@@ -9,8 +9,6 @@
 (def BUFFER_SIZE 4096)
 (def RUNNING true)
 
-;;TODO stderr redirect
-
 (defclass StdOut[object]
   (defn __init__[self]
     (setv self.buffer ""))
@@ -63,5 +61,5 @@
 (defn unregister[]
   (print "blispy repl unregistering"))
 
-(defmain [&rest args]
-  (register))
+;; (defmain [&rest args]
+;;   (register))
