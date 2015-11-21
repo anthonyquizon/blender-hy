@@ -1,12 +1,5 @@
-
 ;; connect to repl PORT
 ;; TODO port arguments
-
-;; (def PORT 9999)
-;; (import [hy.completion :as completion]
-;;         [hy.cmdline :as cmdline])
-
-;; ;;create socket
 
 (import [socket :as s]
         [version]
@@ -14,42 +7,27 @@
 
 (def HOST "localhost")
 (def ENCODING "utf-8")
-(def PORT 9999)
+(def BUFFER_SIZE 4096)
+(def PORT 9993)
 
-(defn create-socket[]
-  (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
-    (socket.setsockopt s.SOL_SOCKET s.SO_REUSEADDR 1)
-    (try
-     (do
-      (socket.bind (, HOST PORT))
-      (socket.listen 5))
-     (except [e s.error] ;;TODO expand error
-       (print "Socket bind faild. Error: " e)))
-    (print "socket binded to host" HOST "at port" PORT)
-    socket
-    ))
+(defn socket-handle[socket data]
+  (socket.connect (, HOST PORT) )
+  (socket.send (data.encode ENCODING))
+  (let [data (socket.recv BUFFER_SIZE)]
+    (print (data.decode ENCODING)))
+  (socket.close))
 
 (defclass BlispyREPL[code.InteractiveConsole]
-  
-  (defn __init__ [self socket]
-    (setv self.socket socket)
-    (socket.connect (, HOST PORT) )
+  (defn __init__ [self]
     (code.InteractiveConsole.__init__ self))
   
   (defn runsource[self source &optional [filename "<input>"] [symbol "single"]]
-    (let [socket self.socket
-          ;; [conn addr] (socket.accept)
-          ]
-      (socket.send (source.encode ENCODING))
+    (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
+      (socket-handle socket source))))
 
-      ;;TODO listen
-      ;; false
-    )))
+(defn run-repl[]
+  (let [repl (BlispyREPL)]
+    (repl.interact)))
 
-(def socket (create-socket))
-(def repl (BlispyREPL socket))
-
-(repl.interact)
-;; (print repl)
-
-;;TODO main
+(defmain [&rest args]
+  (run-repl))
