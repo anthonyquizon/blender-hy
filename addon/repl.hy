@@ -1,48 +1,21 @@
 (import [threading :as th]
         [socket :as s]
+        [sys]
         [hy])
 
 (def HOST "localhost")
 (def PORT 9999)
+(def ENCODING "utf-8")
 (def RUNNING true)
 
-;; (defclass ToolsPanel [bpy.types.Panel]
-  
-
-;;   )
-;; class ToolsPanel(bpy.types.Panel):
-;;     bl_label = "Hy Language"
-;;     bl_space_type = "VIEW_3D"
-;;     bl_region_type = "TOOLS"
-
-;;     def draw(self, context):
-;;         self.layout.operator("hy.start_repl")
-
-;; create subprocess
-
-;;TODO register
-
-;; (defn register[]
-;;   (print "Hy register"))
-
-;; (defn unregister[]
-;;   (print "Hy unregister"))
-
-
-;;stdout redirect
-;;stderr redirect
-
-;; import sys
+;;TODO stdout redirect
+;;TODO stderr redirect
 
 ;; class StdOut(object):
 ;;     def write(self, string):
-;;         sys.__stdout__.write(string)
-;;         sys.__stdout__.write(string)
 ;;         sys.__stdout__.write(string)                
         
 ;; sys.stdout = StdOut()
-
-;;csp to thread
 
 (defn thread-handle [socket]
   (while RUNNING
@@ -52,6 +25,7 @@
       (print "Connected with" (get addr 0) ":" (get addr 1))
       (print "Recieved:" data-str)
       (print (eval (read-str data-str)))
+      ;; TODO send to out socket
       )))
 
 (defn create-socket[]
@@ -73,8 +47,7 @@
 (defn register[]
   (let [socket (create-socket)
         thread (apply (. th Thread) [] {:target thread-handle :args (, socket)})]
-       (thread.start)
-       ))
+       (thread.start)))
 
 (defn unregister[]
   (print "blispy repl unregistering"))
