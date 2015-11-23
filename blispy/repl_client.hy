@@ -3,7 +3,9 @@
 
 (import [socket :as s]
         [version]
-        [code])
+        [code]
+        [hy.completer [completion Completer]]
+        [hy.lex [PrematureEndOfInput tokenize]])
 
 (def HOST "localhost")
 (def ENCODING "utf-8")
@@ -22,12 +24,23 @@
     (code.InteractiveConsole.__init__ self))
   
   (defn runsource[self source &optional [filename "<input>"] [symbol "single"]]
-    (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
-      (socket-handle socket source))))
+    (try
+     (do
+      (tokenize source)
+      (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
+        (socket-handle socket source)))
+     (except [e PrematureEndOfInput]
+       true))))
 
+;; TODO fun blispy banner
 (defn run-repl[]
-  (let [repl (BlispyREPL)]
-    (repl.interact)))
+  (let [repl (BlispyREPL)
+        namespace {"__name__" "__console__" "__doc__" ""}]
+    (repl.interact "Hello BLISPY!")
+    ;; (with (completion (Completer namespace))
+    ;;       (repl.interact "Hello BLISPY!"))
+    
+    ))
 
 (defmain [&rest args]
   (run-repl))

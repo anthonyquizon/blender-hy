@@ -1,13 +1,20 @@
 (import [threading :as th]
         [socket :as s]
         [sys]
-        [hy])
+        [hy]
+        [atexit]
+        [signal])
 
 (def HOST "localhost")
 (def PORT 9992)
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
 (def RUNNING true)
+(def ADDON_NAME "blispy")
+(def thread nil)
+
+(defn log [&rest args]
+  (print ADDON_NAME ":" args))
 
 (defclass StdOut[object]
   (defn __init__[self]
@@ -41,6 +48,7 @@
         stdout (StdOut)]
     (setv sys.stdout stdout)
     (while RUNNING
+      ;;TODO threading events
       (process-input socket stdout))))
 
 (defn create-socket[]
@@ -50,16 +58,35 @@
       (socket.bind (, HOST PORT))
       (socket.listen 1))
      (except [e s.error] ;;TODO expand error
-       (print "Socket bind faild. Error: " e)))
-    (print "socket binded to host" HOST "at port" PORT)
+       (log "Socket bind faild. Error:" e)))
+    (log "socket binded to host" HOST "at port" PORT)
     socket))
 
-(defn register[]
-  (let [thread (apply (. th Thread) [] {:target thread-handle})]
-    (thread.start)))
+(defn init[]
+  (log "starting repl server")
+  (setv thread (apply (. th Thread) [] {:target thread-handle}))
+  (thread.start))
 
-(defn unregister[]
-  (print "blispy repl unregistering"))
+(defn stop[]
+  (log "stopping repl server")
+  ;; TODO stop threads
+  )
 
-;; (defmain [&rest args]
-;;   (register))
+(defn signal_handler[signal frame]
+  (log "exiting")
+  (sys.exit 0))
+
+(defn on-register[]
+  (init))
+
+(defn on-unregister[])
+
+(defn on-exit[]
+  (stop))
+
+(signal.signal signal.SIGINT signal-handler)
+
+(atexit.register on-exit)
+
+(defmain [&rest args]
+  (init))
