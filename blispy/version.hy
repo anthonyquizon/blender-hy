@@ -1,3 +1,2 @@
-
-(def --appname-- "blispy")
-(def --version-- "0.0.1")
+(def __appname__ "blispy")
+(def __version__ "0.0.1")

@@ -11,6 +11,7 @@
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
 (def PORT 9992)
+(def banner (.format "{} {}" version.__appname__ version.__version__))
 
 (defn socket-handle[socket data]
   (socket.connect (, HOST PORT) )
@@ -32,17 +33,16 @@
      (except [e PrematureEndOfInput]
        true))))
 
+
 ;; TODO fun blispy banner
 (defn run-repl[]
   (let [repl (BlispyREPL)
         namespace {"__name__" "__console__" "__doc__" ""}]
-    (repl.interact "Hello BLISPY!")
+    (repl.interact banner)
 
     ;;TODO completion from server side?
-    
     ;; (with (completion (Completer namespace))
     ;;       (repl.interact "Hello BLISPY!"))
-    
     ))
 
 (defmain [&rest args]
