@@ -1,6 +1,5 @@
 import os
 import sys
-import bpy
 
 addonPath = os.path.abspath(os.path.dirname(__file__))
 modulesPath = os.path.abspath(os.path.join(addonPath, "modules"))
@@ -13,7 +12,8 @@ import repl
 
 bl_info = {
     "name": "Blispy",
-    "category": "Script"
+    "category": "System",
+    "description": "hy lang integration kit"
 }
 
 

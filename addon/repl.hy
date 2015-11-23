@@ -30,7 +30,7 @@
         data-str (data.decode "utf-8")]
     (try
      (let [result (eval (read-str data-str) (globals))
-           buffer (+ stdout.buffer (if (!= result None) (str result) ""))]
+           buffer (+ stdout.buffer (str result))]
        (send conn buffer)
        (stdout.flush))
      (except []
