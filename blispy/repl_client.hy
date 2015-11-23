@@ -37,6 +37,9 @@
   (let [repl (BlispyREPL)
         namespace {"__name__" "__console__" "__doc__" ""}]
     (repl.interact "Hello BLISPY!")
+
+    ;;TODO completion from server side?
+    
     ;; (with (completion (Completer namespace))
     ;;       (repl.interact "Hello BLISPY!"))
     
