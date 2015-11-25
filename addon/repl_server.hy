@@ -2,6 +2,7 @@
         [socket :as s]
         [sys]
         [hy]
+        [hy.compiler [HyTypeError]]
         [atexit]
         [signal])
 
@@ -40,8 +41,8 @@
            buffer (+ stdout.buffer (str result))]
        (send conn buffer)
        (stdout.flush))
-     (except []
-       (send conn "eval error")))))
+     (except [e Exception]
+       (send conn (str e))))))
   
 (defn thread-handle []
   (let [socket (create-socket)
@@ -81,12 +82,8 @@
 
 (defn on-unregister[])
 
-(defn on-exit[]
-  (stop))
-
 (signal.signal signal.SIGINT signal-handler)
-
-(atexit.register on-exit)
+(atexit.register stop)
 
 (defmain [&rest args]
   (init))
