@@ -10,7 +10,7 @@
 (def HOST "localhost")
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
-(def PORT 9992)
+(def PORT 9991)
 (def banner (.format "{} {}" version.__appname__ version.__version__))
 
 (defn socket-handle[socket data]

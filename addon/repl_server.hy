@@ -1,13 +1,14 @@
 (import [threading :as th]
         [socket :as s]
         [sys]
+        [traceback]
         [hy]
         [hy.compiler [HyTypeError]]
         [atexit]
         [signal])
 
 (def HOST "localhost")
-(def PORT 9992)
+(def PORT 9991)
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
 (def RUNNING true)
@@ -42,7 +43,9 @@
        (send conn buffer)
        (stdout.flush))
      (except [e Exception]
-       (send conn (str e))))))
+       (let [tb (traceback.format_exc)
+             out (+ tb (str e))]
+         (send conn out))))))
   
 (defn thread-handle []
   (let [socket (create-socket)
