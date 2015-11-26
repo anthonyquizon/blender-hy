@@ -11,9 +11,12 @@
 
 ;;TODO arguments
 ;;TODO evnironment variable
+;;TODO server repl (test mode)
+;;TODO client repl
 
 ;;TODO pip install -t addon/modules
 ;;TODO python-sh
+
 
 (import shutil)
 (import os)

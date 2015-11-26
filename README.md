@@ -5,6 +5,8 @@ A hy development kit for blender
 
 ## Features
 * external nREPL connection (TODO)
+* external hy scripting BGE and author (TODO)
+* hot code swapping (TODO)
 
 ## Installation
 TODO
