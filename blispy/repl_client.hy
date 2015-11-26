@@ -5,7 +5,7 @@
         [version]
         [code]
         [hy.completer [completion Completer]]
-        [hy.lex [PrematureEndOfInput tokenize]])
+        [hy.lex [LexException PrematureEndOfInput tokenize]])
 
 (def HOST "localhost")
 (def ENCODING "utf-8")
@@ -31,8 +31,15 @@
       (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
         (socket-handle socket source)))
      (except [e PrematureEndOfInput]
-       true))))
-
+       true)
+     (except [e LexException]
+       (do
+        (if (= e.source None)
+         (do
+          (setv e.source source)
+          (setv e.source source)))
+        (sys.stderr.write (str e))
+        false)))))
 
 ;; TODO fun blispy banner
 (defn run-repl[]
