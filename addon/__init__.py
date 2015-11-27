@@ -14,7 +14,7 @@ import atexit
 
 bl_info = {
     "name": "Blispy",
-    "category": "System",
+    "category": "Development",
     "description": "hy lang integration kit"
 }
 
