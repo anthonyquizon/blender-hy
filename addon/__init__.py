@@ -8,9 +8,7 @@ sys.path.append(addonPath)
 sys.path.append(modulesPath)
 
 import hy
-import repl_server
-import atexit
-
+import main
 
 bl_info = {
     "name": "Blispy",
@@ -18,19 +16,12 @@ bl_info = {
     "description": "hy lang integration kit"
 }
 
-
 def register():
-    repl_server.on_register()
+    main.register()
 
 
 def unregister():
-    repl_server.on_unregister()
-
-
-def exit_handler():
-    repl_server.on_exit()
-
-atexit.register(exit_handler)
+    main.unregister()
 
 if __name__ == "__main__":
     register()

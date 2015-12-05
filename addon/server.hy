@@ -1,19 +1,18 @@
-(import [threading :as th]
-        [socket :as s]
+(import [socket :as s]
         [sys]
         [traceback]
+        [time]
+        [bpy]
         [hy]
-        [hy.compiler [HyTypeError]]
-        [atexit]
-        [signal])
+        [hy.compiler [HyTypeError]])
 
 (def HOST "localhost")
-(def PORT 9991)
+(def PORT 9992)
 (def ENCODING "utf-8")
 (def BUFFER_SIZE 4096)
-(def RUNNING true)
-(def ADDON_NAME "blispy")
-(def thread nil)
+(def ADDON_NAME "blispy") ;;TODO move to version file
+(def socket nil)
+(def stdout nil)
 
 (defn log [&rest args]
   (print ADDON_NAME ":" args))
@@ -33,7 +32,7 @@
 (defn send [conn data]
   (conn.send (data.encode ENCODING)))
 
-(defn process-input [socket stdout]
+(defn process-input []
   (let [[conn addr] (socket.accept)
         data (conn.recv BUFFER_SIZE)
         data-str (data.decode "utf-8")]
@@ -42,23 +41,18 @@
            buffer (+ stdout.buffer (str result))]
        (send conn buffer)
        (stdout.flush))
+     (except [e socket.error]
+       (print "socket error"))
      (except [e Exception]
        (let [tb (traceback.format_exc)
              out (+ tb (str e))]
          (send conn out))))))
-  
-(defn thread-handle []
-  (let [socket (create-socket)
-        stdout (StdOut)]
-    (setv sys.stdout stdout)
-    (while RUNNING
-      ;;TODO threading events
-      (process-input socket stdout))))
 
 (defn create-socket[]
   (let [socket (s.socket s.AF_INET s.SOCK_STREAM)]
     (try
      (do
+      (socket.setblocking 0)
       (socket.bind (, HOST PORT))
       (socket.listen 1))
      (except [e s.error] ;;TODO expand error
@@ -66,29 +60,25 @@
     (log "socket binded to host" HOST "at port" PORT)
     socket))
 
-(defn init[]
-  (log "starting repl server")
-  (setv thread (apply (. th Thread) [] {:target thread-handle}))
-  (thread.start))
+(defn on-modal[]
+  (process-input))
 
-(defn stop[]
-  (log "stopping repl server")
-  ;; TODO stop threads
+;;TODO rename
+(defn on-register[]
+  (setv stdout (StdOut))
+  (setv sys.stdout stdout)
+  (setv socket (create-socket))
+  
+  ;; (bpy.app.handlers.frame_change_post.append process-input)
   )
 
-(defn signal_handler[signal frame]
-  (log "exiting")
-  (sys.exit 0))
+(defn on-unregister[]
+  ;; (bpy.app.handlers.frame_change_post.remove process-input)
+  )
 
-(defn on-register[]
-  (init))
-
-(defn on-unregister[])
-
-;;TODO game engine repl
-
-(signal.signal signal.SIGINT signal-handler)
-(atexit.register stop)
-
-(defmain [&rest args]
-  (init))
+(defclass BlispyREPL[]
+  (defn start [])
+  (defn end [])
+  (defn update [])
+  (defn register [])
+  (defn unregister []))
