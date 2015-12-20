@@ -3,7 +3,7 @@
 
 (defclass ModalTimerOperator [bpy.types.Operator]
   (setv bl_idname "wm.modal_timer_operator") ;;TODO rename
-  (setv bl_label "Modal Timer Operator") ;;TODO rename
+  (setv bl_label "Blispy REPL") ;;TODO rename
   (setv _timer nil)
 
   (defn modal[self context event]
@@ -20,7 +20,6 @@
     (let [wm context.window_manager]
       (wm.event_timer_remove self._timer)
       (set ["CANCELLED"]))))
-
 
 (defn register[]
   (bpy.utils.register_class ModalTimerOperator)

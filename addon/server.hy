@@ -60,25 +60,15 @@
     (log "socket binded to host" HOST "at port" PORT)
     socket))
 
-(defn on-modal[]
-  (process-input))
-
-;;TODO rename
-(defn on-register[]
-  (setv stdout (StdOut))
-  (setv sys.stdout stdout)
-  (setv socket (create-socket))
-  
-  ;; (bpy.app.handlers.frame_change_post.append process-input)
-  )
-
-(defn on-unregister[]
-  ;; (bpy.app.handlers.frame_change_post.remove process-input)
-  )
 
 (defclass BlispyREPL[]
-  (defn start [])
-  (defn end [])
-  (defn update [])
-  (defn register [])
-  (defn unregister []))
+  (defn start[]
+    (setv stdout (StdOut))
+    (setv sys.stdout stdout)
+    (setv socket (create-socket))
+    )
+  
+  (defn update[]
+    (process-input))
+  
+  (defn end[]))
