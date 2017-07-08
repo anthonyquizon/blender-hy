@@ -61,7 +61,7 @@
     socket))
 
 
-(defclass BlispyREPL[]
+(defclass HyREPL[]
   (defn start[]
     (setv stdout (StdOut))
     (setv sys.stdout stdout)

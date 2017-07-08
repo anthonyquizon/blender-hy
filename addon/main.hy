@@ -1,9 +1,9 @@
 (import bpy)
-(import server)
+;;(import server)
 
 (defclass ModalTimerOperator [bpy.types.Operator]
   (setv bl_idname "wm.modal_timer_operator") ;;TODO rename
-  (setv bl_label "Blispy REPL") ;;TODO rename
+  (setv bl_label "Blender Hy REPL") ;;TODO rename
   (setv _timer nil)
 
   (defn modal[self context event]
@@ -22,9 +22,10 @@
       (set ["CANCELLED"]))))
 
 (defn register[]
-  (bpy.utils.register_class ModalTimerOperator)
+  ;;(bpy.utils.register_class ModalTimerOperator)
   ;;TODO serve start
   )
 
 (defn unregister[]
-  (bpy.utils.unregister_class ModalTimerOperator))
+  ;;(bpy.utils.unregister_class ModalTimerOperator)
+  )

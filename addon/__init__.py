@@ -2,16 +2,16 @@ import os
 import sys
 
 addonPath = os.path.abspath(os.path.dirname(__file__))
-modulesPath = os.path.abspath(os.path.join(addonPath, "modules"))
+packagesPath = os.path.abspath(os.path.join(addonPath, "env/lib/python3.6/site-packages"))
 
 sys.path.append(addonPath)
-sys.path.append(modulesPath)
+sys.path.append(packagesPath)
 
 import hy
 import main
 
 bl_info = {
-    "name": "Blispy",
+    "name": "Blender Hy",
     "category": "Development",
     "description": "hy lang integration kit"
 }
@@ -19,9 +19,9 @@ bl_info = {
 def register():
     main.register()
 
-
 def unregister():
     main.unregister()
 
 if __name__ == "__main__":
     register()
+
